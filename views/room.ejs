@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src = "https://cdn.socket.io/socket.io-3.0.0.js"></script>
+    <script defer src = "client.js"></script>
+    <link rel = "stylesheet" href = "styles.css">
+    <script>
+      const roomName = "<%= roomName %>"
+    </script>
+    <title><%=roomName%></title>
+</head>
+<body>
+    <h1 id = "title"><%=roomName%></h1>
+  <div id = "chatAndUsers">
+    <div id = "chat" style="overflow-y:auto;">
+        
+    </div>
+    <div id = "userbox" style="overflow-y:auto;">
+      <div id = "label">
+        <h3>Active Users</h3>
+      </div>
+      <div id = "users">
+        
+      </div>
+    </div>
+  </div>
+    <div id = "message">
+        <h4>Enter Message</h4>
+        <input id = "mess" type = "text">
+        <button id = "submit">Submit</button>
+    </div>
+</body>
+</html>
