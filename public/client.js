@@ -1,4 +1,4 @@
-const socket = io("https://chatnow-back.herokuapp.com/");
+const socket = io("ws://chatnow-back.herokuapp.com/");
 const userbox = document.getElementById("users");
 let username;
 //Allocates username and announces someone joined => Also displays all active users for new member
