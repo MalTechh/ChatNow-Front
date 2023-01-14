@@ -1,4 +1,4 @@
-const socket = io("ws://localhost:5000");
+const socket = io();
 const userbox = document.getElementById("users");
 let username;
 let userdic;
