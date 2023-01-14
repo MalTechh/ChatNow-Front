@@ -42,6 +42,14 @@ app.get("/:room", (req, res) => {
 //opens websocket
 io.on("connection", (socket) => {
   //listens for message and emits
+  socket.on("checkuser", (roomName) => {
+    if (rooms[roomName] == undefined) {
+      console.log("New room created");
+    } else {
+      console.log(roomName, "users sent");
+      io.to(roomName).emit("checkuser", Object.values(rooms[roomName]));
+    }
+  });
   socket.on("message", (roomName, message, username) => {
     console.log("Message recieved");
     io.to(roomName).emit("message", message, username);
@@ -61,7 +69,6 @@ io.on("connection", (socket) => {
   socket.on("disconnect", (reason) => {
     if (reason != "server namespace disconnect") {
       for (roomNames in rooms) {
-        console.log(roomNames);
         if (rooms[roomNames][socket.id] != undefined) {
           console.log("disconnect from " + roomNames);
           io.to(roomNames).emit("left", rooms[roomNames][socket.id], roomNames);
@@ -69,6 +76,7 @@ io.on("connection", (socket) => {
         }
         if (JSON.stringify(rooms[roomNames]) === "{}") {
           delete rooms[roomNames];
+          console.log(roomNames);
           io.emit("clearRooms", roomNames);
         }
       }
@@ -86,3 +94,4 @@ io.on("connection", (socket) => {
 
 let port = process.env.PORT || 5000;
 server.listen(port, () => console.log("Listening on port", port));
+
