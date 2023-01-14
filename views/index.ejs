@@ -7,9 +7,10 @@
     <script src = "https://cdn.socket.io/socket.io-3.0.0.js"></script>
     <script defer src = "client.js"></script>
     <link rel = "stylesheet" href = "stylerooms.css">
-    <title>Chat Rooms</title>
+    <title>ChatNow</title>
 </head>
 <body>
+  <h1 id = "title">ChatNow</h1>
     <div id = room-container>
         <% Object.keys(rooms).forEach(room => { %>
             <div class = "rooms"><%= room %>
