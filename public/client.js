@@ -1,7 +1,6 @@
 const socket = io();
 const userbox = document.getElementById("users");
 let username;
-let userdic;
 //Allocates username and announces someone joined => Also displays all active users for new member
 socket.on("connect", () => {
   if (userbox != null) {
@@ -9,10 +8,6 @@ socket.on("connect", () => {
     let user = "";
     while (user == "" || user == null) {
       user = prompt("Select a Username");
-      socket.emit("checkuser", roomName);
-      if (userdic != undefined && user in userdic) {
-        user = null;
-      }
     }
     username = user;
     socket.emit("newUser", roomName, username);
@@ -22,10 +17,7 @@ socket.on("connect", () => {
     });
   }
 });
-socket.on("checkuser", (users) => {
-  userdic = users;
-  console.log(userdic);
-});
+
 socket.on("newRoom", (roomName) => {
   updateRooms(roomName);
 });
