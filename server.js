@@ -42,14 +42,6 @@ app.get("/:room", (req, res) => {
 //opens websocket
 io.on("connection", (socket) => {
   //listens for message and emits
-  socket.on("checkuser", (roomName) => {
-    if (rooms[roomName] == undefined) {
-      console.log("New room created");
-    } else {
-      console.log(roomName, "users sent");
-      io.to(roomName).emit("checkuser", Object.values(rooms[roomName]));
-    }
-  });
   socket.on("message", (roomName, message, username) => {
     console.log("Message recieved");
     io.to(roomName).emit("message", message, username);
@@ -86,12 +78,9 @@ io.on("connection", (socket) => {
   socket.on("loadUsers", (roomName) => {
     io.to(roomName).emit("loadUsers", rooms[roomName]);
   });
-  //Check today
-  socket.on("UpdateTitle", () => {
-    io.emit("UpdateTitle");
-  });
 });
 
 let port = process.env.PORT || 5000;
 server.listen(port, () => console.log("Listening on port", port));
+
 
