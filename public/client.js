@@ -1,12 +1,18 @@
-const socket = io();
+const socket = io("ws://localhost:5000");
 const userbox = document.getElementById("users");
 let username;
+let userdic;
 //Allocates username and announces someone joined => Also displays all active users for new member
 socket.on("connect", () => {
   if (userbox != null) {
+    userdic = undefined;
     let user = "";
     while (user == "" || user == null) {
       user = prompt("Select a Username");
+      socket.emit("checkuser", roomName);
+      if (userdic != undefined && user in userdic) {
+        user = null;
+      }
     }
     username = user;
     socket.emit("newUser", roomName, username);
@@ -15,6 +21,10 @@ socket.on("connect", () => {
       loadUsers(dic);
     });
   }
+});
+socket.on("checkuser", (users) => {
+  userdic = users;
+  console.log(userdic);
 });
 socket.on("newRoom", (roomName) => {
   updateRooms(roomName);
@@ -31,9 +41,13 @@ socket.on("left", (username, roomName) => {
 const submit = document.getElementById("submit");
 //send message to server through websocket
 submit.addEventListener("click", () => {
-  const message = document.getElementById("mess");
-  socket.emit("message", roomName, message.value, username);
-  message.value = "";
+  sendMessage();
+});
+const inputfield = document.getElementById("mess");
+inputfield.addEventListener("keypress", (event) => {
+  if (event.key == "Enter") {
+    sendMessage();
+  }
 });
 // triggered when server revieces a message
 socket.on("message", (message, user) => {
@@ -44,6 +58,11 @@ socket.on("clearRooms", (roomName) => {
   clearRoom(roomName);
 });
 
+function sendMessage() {
+  const message = document.getElementById("mess");
+  socket.emit("message", roomName, message.value, username);
+  message.value = "";
+}
 function addMessage(message, user) {
   if (user != null) {
     const chatbox = document.getElementById("chat");
@@ -88,6 +107,7 @@ function updateRooms(roomName) {
   }
   const roomNamebox = document.createElement("div", "rooms");
   roomNamebox.setAttribute("id", roomName);
+  roomNamebox.setAttribute("class", "rooms");
   const link = document.createElement("a");
   const name = document.createElement("p");
   name.innerText = roomName;
@@ -110,10 +130,12 @@ function loadRoomName(roomName) {
 }
 function clearRoom(roomName) {
   const roomBox = document.getElementById("room-container");
+  console.log("here");
   if (roomBox == null) {
     console.log("server error");
   }
   for (const child of roomBox.children) {
+    console.log(roomName);
     if (child.id == roomName) {
       removeChild(child);
     }
